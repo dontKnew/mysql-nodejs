@@ -5,7 +5,7 @@ A powerful and flexible database query builder for Node.js with MySQL support. T
 ## Installation
 
 ```bash
-npm install
+npm install 
 ```
 
 ## Configuration
