@@ -1,10 +1,9 @@
-  import mysql from "mysql2/promise";
+import mysql from "mysql2/promise";
 
 /*
 ==================================================
                TABLE OF CONTENTS
 ==================================================
-
 0.  Overview
 1.  MySQL Connection Pool
 2.  Query Builder Class (DB)
@@ -112,12 +111,51 @@ class DB {
     return this;
   }
 
+  /* ===============================
+      2.5.1 WHERE IN
+  ================================ */
+  /**
+   * @param {string} column - Column ka naam (e.g., 'id' ya 'status')
+   * @param {Array} values - Values ki array (e.g., [1, 2, 3])
+   */
+  whereIn(column, values = []) {
+    if (!Array.isArray(values) || values.length === 0) {
+      this.wheres.push("1 = 0"); 
+      return this;
+    }
+    const placeholders = values.map(() => "?").join(", ");
+    
+    this.wheres.push(`${column} IN (${placeholders})`);
+    
+    this.params.push(...values);
+    
+    return this;
+  }
+
   whereEqual(data = {}) {
     Object.entries(data).forEach(([k, v]) =>
       this.where(k, "=", v)
     );
     return this;
   }
+
+  whereLike(column, value) {
+    this.wheres.push(`${column} LIKE ?`);
+    this.params.push(`%${value}%`);
+    return this;
+  }
+
+  whereAnyLike(columns = [], value) {
+    if (!value || !columns.length) return this;
+
+    const likes = columns.map(col => `${col} LIKE ?`).join(" OR ");
+    this.wheres.push(`(${likes})`);
+    this.params.push(...columns.map(() => `%${value}%`));
+
+    return this;
+  }
+
+
 
   /* ===============================
      2.6 ORDER & LIMIT
@@ -289,12 +327,10 @@ class DB {
 
     return {
       data,
-      meta: {
-        total,
-        perPage,
-        currentPage: page,
-        lastPage: Math.ceil(total / perPage),
-      },
+      total,
+      perPage,
+      currentPage: page,
+      lastPage: Math.ceil(total / perPage),
     };
   }
 
@@ -388,7 +424,6 @@ class DB {
     const count = await this.count();
     return count > 0;
   }
-
 
 
 
