@@ -1,13 +1,21 @@
 {
-  "name": "phpmaster-mysql",
+  "name": "@phpmaster/mysql",
   "version": "1.0.0",
   "main": "index.js",
   "author": "Sajid Ali",
   "license": "MIT",
   "type": "module",
   "description": "Reusable MySQL library database package",
-  "keywords": ["mysql", "database", "library", "phpmaster-mysql"],
+  "keywords": [
+    "mysql2",
+    "mysql",
+    "database",
+    "library",
+    "phpmaster-mysql",
+    "@phpmaster-mysql"
+  ],
   "dependencies": {
-    "mysql2": "^3.16.2"
+    "mysql2": "^3.16.2",
+    "phpmaster-mysql": "^1.0.0"
   }
 }
